@@ -1,6 +1,7 @@
 import hashlib
 import json
 import logging
+from urllib.parse import parse_qs
 
 from channels.exceptions import InvalidChannelLayerError
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -21,29 +22,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     logger = logging.getLogger(f"{__name__}.ChatConsumer")
 
-    @database_sync_to_async
-    def load_session(self):
-        "Please don't be lazy" in self.scope["session"]
-
     async def websocket_connect(self, message):
-        # Check for valid session data
-        await self.load_session()
-        if "checksum" not in self.scope["session"]:
-            await self.close(1008)
-            return
-        if "user_name" not in self.scope["session"]:
+        # Parse get query string
+        query = parse_qs(self.scope["query_string"].decode())
+        self.logger.error(query)
+
+        # Check query parameters
+        if "user_name" not in query or "meeting_id" not in query or "checksum" not in query:
             await self.close(1008)
             return
 
         # Store relevant data
-        user_name = self.scope["session"]["user_name"]
-        meeting_id = self.scope["url_route"]["kwargs"]["meeting_id"]
+        user_name = query["user_name"][0]
+        meeting_id = query["meeting_id"][0]
 
         # Check checksum
         tmp_checksum = hashlib.sha512(
             f"{user_name}{meeting_id}{settings.SHARED_SECRET}".encode("utf-8")
         ).hexdigest()
-        if self.scope["session"]["checksum"] != tmp_checksum:
+        if query["checksum"][0] != tmp_checksum:
             await self.close(1008)
             return
 
