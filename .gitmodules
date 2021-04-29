@@ -1,0 +1,3 @@
+[submodule "bbb_stream_chat/bbb_common_api"]
+	path = bbb_stream_chat/bbb_common_api
+	url = https://github.com/myOmikron/bbb-common-api.git
