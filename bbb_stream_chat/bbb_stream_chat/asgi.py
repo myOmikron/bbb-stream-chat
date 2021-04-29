@@ -17,6 +17,6 @@ from chat.routing import websocket
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bbb_stream_chat.settings')
 
 application = ProtocolTypeRouter({
-    "ws": websocket,
+    "websocket": websocket,
     "http": get_asgi_application(),
 })
