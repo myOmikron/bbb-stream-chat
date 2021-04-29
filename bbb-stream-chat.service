@@ -1,0 +1,12 @@
+[Unit]
+Description=Stream-Chat server
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/home/bbb-stream-chat/bbb-stream-chat/venv/bin/python3 manage.py runserver 127.0.0.1:8008
+User=bbb-stream-chat
+WorkingDirectory=/home/bbb-stream-chat/bbb-stream-chat/bbb_stream_chat/
+Restart=always
+KillSignal=SIGKILL
