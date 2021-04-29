@@ -7,6 +7,6 @@ from chat.consumer import ChatConsumer
 
 websocket = SessionMiddlewareStack(
     URLRouter([
-        re_path(r"watch/(?P<meeting_id>.+)", ChatConsumer.as_asgi()),
+        re_path(r"(?P<meeting_id>.+)", ChatConsumer.as_asgi()),
     ])
 )
