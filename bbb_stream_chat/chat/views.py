@@ -102,6 +102,30 @@ class EndChat(PostApiPoint):
             )
 
 
+class ClearChat(PostApiPoint):
+
+    endpoint = "clearChat"
+    required_parameters = ["chat_id"]
+
+    def safe_post(self, request, parameters, *args, **kwargs):
+        try:
+            chat = Chat.objects.get(parameters["chat_id"])
+        except Chat.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "message": "No chat was found"},
+                status=404, reason="No chat was found"
+            )
+
+        Message.objects.filter(chat=chat).delete()
+
+        # TODO
+        # Notify clients via websocket
+
+        return JsonResponse(
+            {"success": True, "message": "All chat messages have been deleted"}
+        )
+
+
 class SendMessage(PostApiPoint):
 
     endpoint = "sendMessage"
