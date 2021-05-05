@@ -25,7 +25,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def websocket_connect(self, message):
         # Parse get query string
         query = parse_qs(self.scope["query_string"].decode())
-        self.logger.error(query)
 
         # Check query parameters
         if "user_name" not in query or "meeting_id" not in query or "checksum" not in query:
