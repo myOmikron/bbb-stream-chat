@@ -4,8 +4,7 @@ from channels.layers import get_channel_layer
 
 from bbb_common_api.views import PostApiPoint, GetApiPoint
 from chat.counter import viewers
-from chat.models import Chat
-
+from chat.models import Chat, Message
 
 channel_layer = get_channel_layer()
 
@@ -122,6 +121,10 @@ class SendMessage(PostApiPoint):
             "user_name": parameters["user_name"],
             "message": parameters["message"]
         })
+
+        Message.objects.create(
+            chat=chat, user_name=parameters["user_name"], message=parameters["message"]
+        )
 
         return JsonResponse(
             {"success": True, "message": "Send message successfully."}
