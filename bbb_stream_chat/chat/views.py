@@ -117,7 +117,7 @@ class SendMessage(PostApiPoint):
                 status=404, reason="No chat was found."
             )
 
-        async_to_sync(channel_layer.group_send)(chat.channel.meeting_id, {
+        async_to_sync(channel_layer.group_send)(chat.chat_id, {
             "type": "chat.message",
             "user_name": parameters["user_name"],
             "message": parameters["message"]
