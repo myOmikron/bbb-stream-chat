@@ -9,14 +9,16 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 
 import os
 
-from channels.routing import ProtocolTypeRouter
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bbb_stream_chat.settings')
+
 from django.core.asgi import get_asgi_application
 
-from chat.consumer import ChatConsumer
+http = get_asgi_application()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bbb_stream_chat.settings')
+from channels.routing import ProtocolTypeRouter
+from chat.consumer import ChatConsumer
 
 application = ProtocolTypeRouter({
     "websocket": ChatConsumer.as_asgi(),
-    "http": get_asgi_application(),
+    "http": http,
 })

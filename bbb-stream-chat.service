@@ -13,7 +13,7 @@ Group=bbb-stream-chat
 # see http://0pointer.net/blog/dynamic-users-with-systemd.html
 RuntimeDirectory=gunicorn
 WorkingDirectory=/home/bbb-stream-chat/bbb-stream-chat/bbb_stream_chat/
-ExecStart=/home/bbb-stream-chat/bbb-stream-chat/venv/bin/gunicorn -c /etc/bbb-stream-chat/gunicorn.conf.py bbb_stream_chat.wsgi
+ExecStart=/home/bbb-stream-chat/bbb-stream-chat/venv/bin/gunicorn -c /etc/bbb-stream-chat/gunicorn.conf.py bbb_stream_chat.asgi
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
