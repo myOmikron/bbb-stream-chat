@@ -90,7 +90,7 @@ class EndChat(PostApiPoint):
     required_parameters = ["chat_id"]
 
     def safe_post(self, request, parameters, *args, **kwargs):
-        chat = Chat.objects.get(parameters["chat_id"]).delete()
+        chat = Chat.objects.get(parameters["chat_id"])
         if chat is None:
             return JsonResponse(
                 {"success": False, "message": "No chat was found"},
