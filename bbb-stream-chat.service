@@ -1,12 +1,23 @@
 [Unit]
-Description=Stream-Chat server
+Description=Chat service for BBB Server
+Requires=bbb-stream-chat.socket
+After=network.target
+
+[Service]
+Type=notify
+# the specific user that our service will run as
+User=bbb-stream-chat
+Group=bbb-stream-chat
+# another option for an even more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/bbb-stream-chat/bbb-stream-chat/bbb_stream_chat/
+ExecStart=/home/bbb-stream-chat/bbb-stream-chat/venv/bin/gunicorn -c /etc/bbb-stream-chat/gunicorn.conf.py bbb_stream_chat.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
-
-[Service]
-ExecStart=/home/bbb-stream-chat/bbb-stream-chat/venv/bin/python3 manage.py runserver 127.0.0.1:8008
-User=bbb-stream-chat
-WorkingDirectory=/home/bbb-stream-chat/bbb-stream-chat/bbb_stream_chat/
-Restart=always
-KillSignal=SIGKILL
