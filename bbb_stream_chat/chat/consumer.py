@@ -3,9 +3,11 @@ import json
 import logging
 from urllib.parse import parse_qs
 
+from asgiref.sync import async_to_sync
 from channels.exceptions import InvalidChannelLayerError
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.utils.html import escape
 from rc_protocol import get_checksum
@@ -13,6 +15,9 @@ import httpx
 
 from chat.models import Chat, Message
 from chat.counter import viewers
+
+
+channel_layer = get_channel_layer()
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -115,3 +120,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_message(self, message):
         await self.send(text_data=json.dumps(message))
+
+    async def chat_clear(self, message):
+        await self.send(text_data=json.dumps(message))
+
+    @staticmethod
+    def clear_chat(chat: Chat):
+        async_to_sync(channel_layer.group_send)(chat.chat_id, {
+            "type": "chat.clear",
+        })

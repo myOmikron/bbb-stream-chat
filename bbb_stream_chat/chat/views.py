@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from channels.layers import get_channel_layer
 
 from bbb_common_api.views import PostApiPoint, GetApiPoint
+from chat.consumer import ChatConsumer
 from chat.counter import viewers
 from chat.models import Chat, Message
 
@@ -118,9 +119,7 @@ class ClearChat(PostApiPoint):
             )
 
         Message.objects.filter(chat=chat).delete()
-
-        # TODO
-        # Notify clients via websocket
+        ChatConsumer.clear_chat(chat)
 
         return JsonResponse(
             {"success": True, "message": "All chat messages have been deleted"}
