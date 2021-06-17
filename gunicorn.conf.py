@@ -24,7 +24,7 @@ capture_output = False
 # [ WORKER ]
 # handle with care
 workers = 1
-worker_class = "sync"
+worker_class = "uvicorn.workers.UvicornWorker"
 threads = 1
 
 # [ LOGGING ]
